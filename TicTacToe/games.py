@@ -61,7 +61,6 @@ def minmax_cutoff(game, state):
     eval=None
 
     def max_value(state, d):
-        # print("Your code goes here -3pt")
         if testCutoff(state, d):
             return eval(state, game)
         v = -np.inf
@@ -70,7 +69,6 @@ def minmax_cutoff(game, state):
         return v
 
     def min_value(state, d):
-        # print("Your code goes here -2pt")
         if testCutoff(state, d):
             return eval(state, game)
         v = np.inf
@@ -94,7 +92,6 @@ def alpha_beta(game, state):
     def max_value(state, alpha, beta):
         if game.terminal_test(state):
             return game.utility(state, player)
-         # print("Your code goes here -3pt")
         v = -np.inf
         for move in game.actions(state):
             v = max(v, min_value(game.result(state, move), alpha, beta))
@@ -106,7 +103,6 @@ def alpha_beta(game, state):
     def min_value(state, alpha, beta):
         if game.terminal_test(state):
             return game.utility(state, player)
-         # print("Your code goes here -3pt")
         v = np.inf
         for move in game.actions(state):
             v = min(v, max_value(game.result(state, move), alpha, beta))
@@ -137,7 +133,6 @@ def alpha_beta_cutoff(game, state):
     def max_value(state, alpha, beta, depth):
         if game.terminal_test(state):
             return game.utility(state, player)
-         # print("Your code goes here -3pt")
         if depth == 0:
             return game.eval1(state)
         v = -np.inf
@@ -151,7 +146,6 @@ def alpha_beta_cutoff(game, state):
     def min_value(state, alpha, beta, depth):
         if game.terminal_test(state):
             return game.utility(state, player)
-         # print("Your code goes here -3pt")
         if depth == 0:
             return game.eval1(state)
         v = np.inf
@@ -205,7 +199,6 @@ def random_player(game, state):
 
 def alpha_beta_player(game, state):
     """uses alphaBeta prunning with minmax, or with cutoff version, for AI player"""
-    # print("Your code goes here -2pt")
     # if len(state.moves) > game.k / 2:
     
     """Use a method to speed up at the start to avoid search down a long tree with not much outcome.
@@ -214,9 +207,6 @@ def alpha_beta_player(game, state):
         game.d = -1
         return alpha_beta(game, state)
     
-    # if len(state.moves) > (game.size * game.size) / 2:
-    # if len(state.moves) > game.k / 2:
-    #     return random_player(game, state)
 
     if len(state.moves) > game.k * game.k - game.k - 1:
         return random_player(game, state)
@@ -225,12 +215,14 @@ def alpha_beta_player(game, state):
     end = start + game.timer
     """use the above timer to implement iterative deepening using alpha_beta_cutoff() version"""
     move = None
-    # print("Your code goes here -10pt")
     while time.perf_counter() < start + game.timer:
         if time.perf_counter() >= end:
             break
         game.d += 1
+        if game.d >= game.maxDepth:
+            break
         move = alpha_beta_cutoff(game, state)
+        
 
     print("iterative deepening to depth: ", game.d)
     game.d = 0
@@ -239,35 +231,23 @@ def alpha_beta_player(game, state):
 
 def minmax_player (game, state):
     """uses minmax or minmax with cutoff depth, for AI player"""
-    # print("Your code goes here -3pt")
-    # return minmax(game, state)
-    # if len(state.moves) > game.k / 2:
 
     if(game.timer < 0):
         game.d = -1
-        print("testtttt minmax")
         return minmax(game, state)
 
-    # if len(state.moves) > (game.size * game.size) / 2:
-    # if len(state.moves) > game.k / 2:
-    # if len(state.moves) <= self.k / 2:
     if len(state.moves) > game.k * game.k - game.k - 1:
-        # print("testtttt random")
         return random_player(game, state)
     
     """Use a method to speed up at the start to avoid search down a long tree with not much outcome.
     Hint:for speedup use random_player for start of the game when you see search time is too long"""
 
-    # if(game.timer < 0):
-    #     game.d = -1
-    #     return minmax(game, state)
 
     start = time.perf_counter()
     end = start + game.timer
     """use the above timer to implement iterative deepening using minmax_cutoff() version"""
     move = None
 
-    # print("Your code goes here -10pt")
     
     while time.perf_counter() < game.timer + start:
         if time.perf_counter() >= end:
@@ -425,7 +405,6 @@ class TicTacToe(Game):
         # Maybe to accelerate, return 0 if number of pieces on board is less than half of board size:
         if len(state.moves) <= self.k / 2:
            return 0
-        # print("Your code goes here 15pt.")
         
 
         opponent = 'O' if state.to_move == 'X' else 'X'

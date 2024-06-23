@@ -4,7 +4,7 @@ import time
 import sys
 import math
 from collections import namedtuple
-import numpy as np
+# import numpy as np
 
 GameState = namedtuple('GameState', 'to_move, move, utility, board, moves')
 
@@ -47,19 +47,16 @@ class MCTS:
             # while count >= 0:
             #     count -= 1
             # SELECT stage use selectNode()
-            # print("Your code goes here -3pt")
             node = self.selectNode(self.root)
 
             if not self.isTerminalState(node.state.utility, node.state.moves):
                 self.expandNode(node)
 
             # SIMULATE stage using simuplateRandomPlay()
-            # print("Your code goes here -3pt")
             node = random.choice(node.children) if len(node.children) > 0 else node
             result = self.simulateRandomPlay(node)
 
             # BACKUP stage using backPropagation
-            # print("Your code goes here -2pt")
             self.backPropagation(node, result)
 
         winnerNode = self.root.getChildWithMaxScore()
@@ -78,10 +75,12 @@ class MCTS:
         children....."""
         childUCT = []
          # Compute UCT values for each child
-  
+
         childUCT = [self.uctValue(nd.visitCount, child.winScore, child.visitCount) for child in nd.children]
+        best_index = max(range(len(childUCT)), key=childUCT.__getitem__)
         # Find the child with the maximum UCT value
-        return nd.children[np.argmax(childUCT)]
+        return nd.children[best_index]
+
 
     def uctValue(self, parentVisit, nodeScore, nodeVisit):
         if nodeVisit == 0:
@@ -126,7 +125,6 @@ class MCTS:
         """propagate upword to update score and visit count from
         the current leaf node to the root node."""
         tempNode = nd
-        # print("Your code goes here -5pt")
         while tempNode is not None:
             tempNode.visitCount += 1
             if winningPlayer != 'N':
